@@ -1,7 +1,8 @@
 import Phaser from "phaser";
-import { TILE_SIZE } from "../world/tiles";
+import { TILE_SIZE } from "../world/tileset";
+import { CHAR_GROUPS, charFrame, type Direction } from "../world/characterSheet";
 
-export type Direction = "up" | "down" | "left" | "right";
+export type { Direction };
 
 const DELTA: Record<Direction, { dx: number; dy: number }> = {
   up: { dx: 0, dy: -1 },
@@ -11,6 +12,7 @@ const DELTA: Record<Direction, { dx: number; dy: number }> = {
 };
 
 const MOVE_MS = 150;
+const GROUP = CHAR_GROUPS.villagerBlue;
 
 /**
  * Pokemon-style grid-locked player: moves exactly one tile per input, tweened
@@ -22,7 +24,7 @@ export class Player {
   tileY: number;
   private facing: Direction = "down";
   private moving = false;
-  private walkFrame = 0;
+  private walkFrame: 0 | 1 | 2 = 0;
   private frameTimer = 0;
 
   constructor(
@@ -34,7 +36,7 @@ export class Player {
     this.tileX = tileX;
     this.tileY = tileY;
     const world = this.worldPos(tileX, tileY);
-    this.sprite = scene.add.sprite(world.x, world.y, "player_down_0");
+    this.sprite = scene.add.sprite(world.x, world.y, "characters", charFrame(GROUP, "down"));
     this.sprite.setOrigin(0.5, 1);
     this.sprite.setDepth(10);
   }
@@ -56,7 +58,7 @@ export class Player {
       if (heldDirection) {
         this.tryMove(heldDirection);
       } else {
-        this.sprite.setTexture(`player_${this.facing}_0`);
+        this.sprite.setFrame(charFrame(GROUP, this.facing, 0));
       }
       return;
     }
@@ -64,8 +66,8 @@ export class Player {
     this.frameTimer += delta;
     if (this.frameTimer > MOVE_MS / 2) {
       this.frameTimer = 0;
-      this.walkFrame = 1 - this.walkFrame;
-      this.sprite.setTexture(`player_${this.facing}_${this.walkFrame}`);
+      this.walkFrame = this.walkFrame === 1 ? 2 : 1;
+      this.sprite.setFrame(charFrame(GROUP, this.facing, this.walkFrame));
     }
   }
 
@@ -75,7 +77,7 @@ export class Player {
     const targetX = this.tileX + dx;
     const targetY = this.tileY + dy;
 
-    this.sprite.setTexture(`player_${this.facing}_0`);
+    this.sprite.setFrame(charFrame(GROUP, this.facing, 0));
 
     if (this.isBlocked(targetX, targetY)) return;
 

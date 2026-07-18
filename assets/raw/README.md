@@ -1,27 +1,29 @@
-# Raw art drop folder
+# Raw art (source of truth)
 
-Push your original PNGs here, unmodified (no recompression/resizing), using these
-filenames so the integration pass can find them automatically:
+These are the original PNGs (uploaded to `main`, now merged into every branch).
+`public/game-assets/` holds the copies Vite actually serves to the game at
+runtime — if you replace a file here, copy it there too.
 
-| Filename | What I saw in your attachment |
-|---|---|
-| `terrain_tileset.png` | Big sheet: grass/water/path/stone terrain, building walls/roofs/doors/windows, trees, bushes, fences, the white archway, bench, signpost |
-| `creatures_small.png` | The small sheet with the two mushroom-folk and the bat/ghost |
-| `props_tileset.png` | Chests, ladders, torches (lit/animated frames), barrels, potions, gems, campfire frames, dark brick tile |
-| `character_sheets.png` | The multi-row walk-cycle sheet: player/villager outfits + turtles + blob/spider creatures |
-| `font.png` | The bitmap font sheet (blue/orange, upper/lower/italic) |
+| File | Contents | Grid |
+|---|---|---|
+| `basictiles.png` | Terrain, buildings, plants, the white entrance gate, well, chest, weapons/furniture | 16x16 tiles, 8 cols x 15 rows |
+| `things.png` | Doors/ladders, chests, cauldrons, torches (3-frame flicker), bombs, gems, wall+torch | 16x16 tiles, 12 cols x 8 rows |
+| `characters.png` | 4 humanoid + 4 creature groups (slime/bat/ghost/spider), each a 3-col (walk frames) x 4-row (down/left/right/up) block | 16x16 frames, 12 cols x 8 rows |
+| `dead.png` | Matching "defeated" poses for the cast in `characters.png` (not wired up yet) | 16x16 frames, 3 cols x 4 rows |
+| `fontlarge.png` | Bitmap font, upper/lower case, blue + orange variants | 16px-wide cols, 4 non-uniform-height rows (lowercase rows include descenders) |
 
-## Also tell me (in your push, a commit message, or your next message)
+Frame-index math and the tile/character legend live in code, not here:
+`src/world/tileset.ts`, `src/world/tiles.ts`, `src/world/characterSheet.ts`,
+`src/ui/BitmapFont.ts`.
 
-1. **Tile size in pixels** for `terrain_tileset.png` and `props_tileset.png` —
-   most packs like this are 16x16, but confirm so tiles don't get sliced
-   wrong. If you're not sure, I can usually infer it once the file is here.
-2. **Frame size** for `character_sheets.png` and `creatures_small.png` (e.g.
-   32x32 per frame, 3 frames per direction, rows ordered down/left/right/up —
-   whatever your sheet actually uses).
-3. **Glyph size / spacing** for `font.png` if it's not a plain fixed-width grid.
+## Not yet used
 
-Once these land on this branch, I'll run an integration pass: slice the
-sheets into a Phaser tileset + spritesheets, swap them in for the current
-placeholder textures (`src/scenes/BootScene.ts`), and remove the placeholder
-generator.
+- `dead.png` (defeated/knocked-out poses) — earmarked for a future
+  battle/interaction system.
+- The skeleton/bat/ghost/spider creature frames in `characters.png` — only
+  the slime is placed as ambient decoration right now.
+- Most of `things.png` (chests/ladders/bombs/gems/campfire) beyond the two
+  plaza torches.
+
+Drop new art in here with a short note on tile size and frame layout if you
+want it integrated.
