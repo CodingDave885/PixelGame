@@ -54,6 +54,10 @@ export class VillageScene extends Phaser.Scene {
       S: this.input.keyboard!.addKey("S"),
       D: this.input.keyboard!.addKey("D"),
     };
+    this.input.keyboard!.addKey("F").on("down", () => {
+      if (this.scale.isFullscreen) this.scale.stopFullscreen();
+      else this.scale.startFullscreen();
+    });
 
     // A zoomed, player-following main camera can't reliably show scrollFactor(0)
     // HUD elements (Phaser renders them at the wrong scale/position), so HUD
@@ -62,6 +66,8 @@ export class VillageScene extends Phaser.Scene {
     const uiLayer = this.add.layer();
     const title = createBitmapText(this, 8, 6, "PIXEL VILLAGE", "orange", 1);
     uiLayer.add(title);
+    const hint = createBitmapText(this, 8, 300, "F FOR FULLSCREEN", "blue", 1);
+    uiLayer.add(hint);
 
     const uiCamera = this.cameras.add(0, 0, this.scale.width, this.scale.height);
     uiCamera.ignore(worldLayer);
