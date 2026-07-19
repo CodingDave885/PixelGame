@@ -27,3 +27,11 @@ Frame-index math and the tile/character legend live in code, not here:
 
 Drop new art in here with a short note on tile size and frame layout if you
 want it integrated.
+
+## Reference-only (not integrated)
+
+- `Copilot_20260718_224126.png` — an AI-generated concept illustration of a
+  village scene, used as a style/composition reference for the courtyard
+  plaza and density pass. Not a real spritesheet (no transparent background,
+  not grid-aligned, single flattened image), so it can't be sliced into
+  tiles. Kept here for context, not loaded by the game.

@@ -159,6 +159,29 @@ export function buildVillageMap(): Tile[][] {
     }
   }
 
+  // A round-ish plaza pad around the well, like a fountain courtyard, with a
+  // little greenery framing its NW/NE corners.
+  const plazaRadius = 3;
+  for (let y = PLAZA.y - plazaRadius; y <= PLAZA.y + plazaRadius; y++) {
+    for (let x = PLAZA.x - plazaRadius; x <= PLAZA.x + plazaRadius; x++) {
+      const dist = Math.abs(x - PLAZA.x) + Math.abs(y - PLAZA.y);
+      if (dist <= plazaRadius && grid[y]?.[x] !== undefined && !isSolid(grid[y][x])) {
+        grid[y][x] = Tile.Path;
+      }
+    }
+  }
+  grid[PLAZA.y - 2][PLAZA.x - 2] = Tile.BushRound;
+  grid[PLAZA.y - 2][PLAZA.x + 2] = Tile.BushRound;
+
+  // A few scattered rocks and a small market-stall crate cluster by the Shop.
+  grid[7][20] = Tile.Rock;
+  grid[3][11] = Tile.Rock;
+  grid[15][19] = Tile.Rock;
+  grid[13][24] = Tile.Rock;
+  grid[10][5] = Tile.Rock;
+  grid[5][21] = Tile.CrateSwords;
+  grid[6][21] = Tile.CrateVase;
+
   // Plaza well.
   grid[PLAZA.y][PLAZA.x] = Tile.Well;
 
